@@ -13,5 +13,13 @@ class Sort<T> {
     private val sortOptions: HashMap<String, ISort<T>> = HashMap()
     fun register(sortImpl: ISort<T>) = sortOptions.put(sortImpl::class.java.name, sortImpl)
     fun getAllImpl() : HashMap<String, ISort<T>> = sortOptions
-    fun getImpl(name: String) = sortOptions[name]
+    fun getImpl(name: String) : ISort<T>? {
+        var result = sortOptions[name]
+        if (result == null) {
+            val filterResult = sortOptions.filter { it.key.contains(name) }
+            if (filterResult.isEmpty()) return null
+            result = filterResult[filterResult.keys.first()]
+        }
+        return result
+    }
 }
